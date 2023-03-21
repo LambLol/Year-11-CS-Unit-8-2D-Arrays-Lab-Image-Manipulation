@@ -12,19 +12,19 @@ import java.util.*;
  * GPL (http://www.gnu.org/licenses/gpl.html).<BR><BR> 
  *
  * This class supports the processing of images.<BR><BR>  
- * 
+ *
  * Input image files must be in JPEG format.  Output files are written 
  * in JPEG format.<BR><BR>
  *
  * Example program, which loads an image from a file dialog,
  * converts it to grayscale, and draws it:<BR><BR>
- * 
+ *
  *<pre> import images.APImage;
  * import images.Pixel;
  *
  * public class TestGrayscale{
  *
- *    public static void main(String[]args){  
+ *    public static void main(String[]args){
  *       APImage image = new APImage();
  *       for (Pixel p : image){
  *          int red = p.getRed();
@@ -48,14 +48,14 @@ import java.util.*;
  * <pre>java -Xmx128m TestGrayscale</pre>
  *
  * allows up to 128 megabytes of heap space for the TestGrayscale program.
-*/
+ */
 
 public class APImage extends JFrame implements Iterable<Pixel>{
-   
+
     // Default width and height of blank images
     static private final int WIDTH = 200;
     static private final int HEIGHT = 200;
-   
+
     // Instance variables
     private Pixel[] pixels;          // Array of pixels
     private Image image;             // The bitmap for display
@@ -92,14 +92,14 @@ public class APImage extends JFrame implements Iterable<Pixel>{
         if (file == null){
             fileName = "";
             image = createImage(getBlankImage(WIDTH, HEIGHT));
-	    }
-	    else{
+        }
+        else{
             fileName = file.getName();
             image = getImageFromFile(fileName);
-	    }
-	    setWindowAttributes();
+        }
+        setWindowAttributes();
     }
-   
+
     // Creates a copy of the given image
     private APImage(APImage original){
         this(original.getWidth(), original.getHeight());
@@ -144,18 +144,18 @@ public class APImage extends JFrame implements Iterable<Pixel>{
      * @param x the column position of the pixel
      * @param y the row position of the pixel
      * @param p the new Pixel
-     */ 
+     */
     public void setPixel(int x, int y, Pixel p){
         pixels[y * image.getWidth(this) + x] = p;
     }
-   
+
     /**
      * Displays the image in its window.
-     */ 
+     */
     public void draw(){
         setVisible(true);
         updateImage();
-    } 
+    }
 
     /**
      * Returns a copy of the image.
@@ -170,13 +170,13 @@ public class APImage extends JFrame implements Iterable<Pixel>{
      * @return a string representation of the image
      */
     public String toString(){
-       if (image == null)
-           return null;
-       else
-           return "IMAGE\n" + 
-                  "File name: " + fileName + "\n" +
-                  "Width: " + getWidth() + "\n" +
-                  "Height: " + getHeight();
+        if (image == null)
+            return null;
+        else
+            return "IMAGE\n" +
+                    "File name: " + fileName + "\n" +
+                    "Width: " + getWidth() + "\n" +
+                    "Height: " + getHeight();
     }
 
     /**
@@ -191,7 +191,7 @@ public class APImage extends JFrame implements Iterable<Pixel>{
      * Saves the image under its current file name or runs <code>saveAs</code> if no file name yet.
      */
     public boolean save(){
-        if (fileName.equals("")) 
+        if (fileName.equals(""))
             return saveAs();
         try{
             int w = image.getWidth(APImage.this);
@@ -225,16 +225,16 @@ public class APImage extends JFrame implements Iterable<Pixel>{
     private void setWindowAttributes(){
         setTitle(fileName);
         //setResizable(false);
-        imagePanel = new ImagePanel(image, 
-                                    image.getWidth(this), 
-                                    image.getHeight(this));
+        imagePanel = new ImagePanel(image,
+                image.getWidth(this),
+                image.getHeight(this));
         Container c = getContentPane();
         c.setBackground(Color.white);
         c.add(imagePanel);
         pack();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
-   
+
     private void updateImage(){
         int w = image.getWidth(APImage.this);
         int h = image.getHeight(APImage.this);
@@ -247,16 +247,16 @@ public class APImage extends JFrame implements Iterable<Pixel>{
         int w = image.getWidth(this);
         int h = image.getHeight(this);
         int[] pixels = new int[w * h];
-        PixelGrabber pg = new PixelGrabber(image, 0, 0, w, h, pixels, 0, w); 
+        PixelGrabber pg = new PixelGrabber(image, 0, 0, w, h, pixels, 0, w);
         try{
             pg.grabPixels();
         }catch (InterruptedException e2) {
             System.err.println("Interrupted waiting for pixels!");
             return null;
-	}
+        }
         if ((pg.getStatus() & ImageObserver.ABORT) != 0) {
             System.err.println("Image fetch aborted or errored");
-	    return null;
+            return null;
         }
         return intsToPixels(pixels);
     }
@@ -292,14 +292,14 @@ public class APImage extends JFrame implements Iterable<Pixel>{
             File file = new File(fileName);
             image = ImageIO.read(file);
             while (image.getWidth(APImage.this) < 0)  // Wait for size to be known
-                {}
+            {}
             pixels = imageToPixels(image);
         }catch(Exception e){
-            System.out.println(e); 
+            System.out.println(e);
         }
         return image;
     }
-   
+
     private File openFileDialog(){
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(new ImageFileFilter(".jpg", "JPEG images (*.jpg)"));
@@ -312,9 +312,9 @@ public class APImage extends JFrame implements Iterable<Pixel>{
                 return file;
             }catch(Exception e){
                 JOptionPane.showMessageDialog(null,
-                                              e.toString());
+                        e.toString());
             }
-            return null;
+        return null;
     }
 
     private File saveFileDialog(){
@@ -329,29 +329,28 @@ public class APImage extends JFrame implements Iterable<Pixel>{
                 return file;
             }catch(Exception e){
                 JOptionPane.showMessageDialog(null,
-                                              e.toString());
+                        e.toString());
             }
-            return null;
+        return null;
     }
-    
+
     private class ImageIterator implements Iterator<Pixel>{
         private int pos = 0;
-      
+
         public boolean hasNext(){
             return pos < pixels.length;
         }
 
         public Pixel next(){
-           if (! hasNext())
-               throw new NoSuchElementException();
-           pos++;
-           return pixels[pos - 1];
+            if (! hasNext())
+                throw new NoSuchElementException();
+            pos++;
+            return pixels[pos - 1];
         }
 
         public void remove(){
             throw new UnsupportedOperationException();
         }
     }
-       
+
 }
-      
