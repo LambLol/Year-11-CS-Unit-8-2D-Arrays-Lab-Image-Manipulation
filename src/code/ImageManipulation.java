@@ -21,7 +21,9 @@ public class ImageManipulation {
 
         //edgeDetection("cyberpunk2077.jpg", 20);
 
-        reflectImage("cyberpunk2077.jpg");
+        //reflectImage("cyberpunk2077.jpg");
+
+        rotateImage("cyberpunk2077.jpg");
     }
 
     /** CHALLENGE ONE: Grayscale
@@ -171,8 +173,17 @@ public class ImageManipulation {
      * OUTPUT: the image rotated 90 degrees CLOCKWISE
      *
      *  */
-    public static void rotateImage(String pathToFile) {
+    public static void rotateImage(String image) {
+        APImage image1 = new APImage(image);
+        APImage image2 = new APImage(image1.getHeight(), image1.getWidth());
 
+        for (int w = 1; w < image1.getWidth(); w++) {
+            for (int h = 1; h < image1.getHeight(); h++) {
+                Pixel pixel = image1.getPixel(w, h);
+                image2.setPixel((image1.getHeight() - h - 1), w, pixel);
+            }
+        }
+        image2.draw();
     }
 
 }
